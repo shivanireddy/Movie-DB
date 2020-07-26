@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import Search from './components/Search'
 import axios from 'axios';
-
+import Results from './components/Results'
 function App() {
   const [state, setState] = useState({
     s:"",
@@ -11,8 +11,12 @@ function App() {
   const apiurl = "http://www.omdbapi.com/?i=tt3896198&apikey=bc539daa";
   const search =(e) => {
     if(e.key === "Enter") {
-      axios(apiurl+"&s=" + state.s).then((data) => {
-        console.log(data);
+      axios(apiurl+"&s=" + state.s).then(({data}) => {
+        let results = data.Search;
+
+        setState(prevState => {
+          return { ...prevState, results: results}
+        })
       });
     }
   }
@@ -30,6 +34,7 @@ function App() {
       </header>
       <main>
         <Search handleInput={handleInput} search={search}/>
+        <Results results={state.results} />
       </main>
     </div>
   );
